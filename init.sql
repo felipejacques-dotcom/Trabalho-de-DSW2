@@ -13,7 +13,8 @@ CREATE TABLE IF NOT EXISTS filmes (
     ano INTEGER,
     genero VARCHAR(50),
     diretor VARCHAR(100),
-    capa VARCHAR(255) -- mudar para adicionar arquivo
+    capa BYTEA,
+    capa_tipo VARCHAR(50) -- capa_tipo pra dizer se é image/jpeg ou png
 );
 
 CREATE TABLE IF NOT EXISTS favoritos (
