@@ -13,7 +13,7 @@ CREATE TABLE IF NOT EXISTS filmes (
     ano INTEGER,
     genero VARCHAR(50),
     diretor VARCHAR(100),
-    capa VARCHAR(255)
+    capa VARCHAR(255) -- mudar para adicionar arquivo
 );
 
 CREATE TABLE IF NOT EXISTS favoritos (
