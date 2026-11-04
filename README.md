@@ -1,22 +1,22 @@
-# Trabalho-de-DSW2
-Site de Avaliação de Filmes
+# Trabalho de DSW2 — Site de Avaliação de Filmes
+
 # CineMatch
 
-## Sobre o Projeto
+## 1. Sobre o Projeto
 
-O CineMatch é uma aplicação web voltada para a descoberta e organização de filmes.
+O CineMatch é uma aplicação web voltada para a descoberta, avaliação e organização de filmes.
 
-A plataforma permitirá que os usuários criem uma conta, façam login, visualizem um catálogo de filmes e adicionem seus filmes favoritos a uma lista pessoal.
+A plataforma permitirá que os usuários criem uma conta, façam login, visualizem um catálogo de filmes, avaliem os títulos disponíveis e adicionem seus filmes favoritos a uma lista pessoal.
 
-O sistema terá dois tipos de acesso: usuário comum e administrador. O usuário comum poderá utilizar as funcionalidades relacionadas à consulta e organização dos filmes, enquanto o administrador terá acesso às funções de gerenciamento do catálogo.
+O sistema terá dois tipos de acesso: usuário comum e administrador. O usuário comum poderá utilizar as funcionalidades relacionadas à consulta, avaliação e organização dos filmes, enquanto o administrador terá acesso às funções de gerenciamento do catálogo.
 
 O projeto será composto por um backend desenvolvido em JavaScript com Node.js e Express, responsável pela API REST e pela comunicação com o banco de dados PostgreSQL, e por um frontend desenvolvido em React, responsável pela interface utilizada pelos usuários.
 
-## Objetivo
+## 2. Objetivo
 
-O objetivo do CineMatch é oferecer uma plataforma simples para que usuários possam consultar filmes, visualizar suas informações e organizar seus filmes favoritos, enquanto o administrador poderá manter o catálogo atualizado.
+O objetivo do CineMatch é oferecer uma plataforma simples para que os usuários possam consultar filmes, visualizar suas informações, registrar avaliações e organizar seus filmes favoritos, enquanto o administrador poderá manter o catálogo atualizado.
 
-## Tipos de Usuário
+## 3. Tipos de Usuário
 
 O sistema contará com dois tipos de usuários: usuário comum e administrador.
 
@@ -30,7 +30,9 @@ O usuário comum poderá:
 - Visualizar os detalhes de um filme;
 - Adicionar filmes aos favoritos;
 - Remover filmes dos favoritos;
-- Visualizar sua lista de filmes favoritos.
+- Visualizar sua lista de filmes favoritos;
+- Avaliar filmes;
+- Editar ou excluir suas próprias avaliações.
 
 ### Administrador
 
@@ -38,7 +40,7 @@ O administrador terá acesso às mesmas funcionalidades do usuário comum, além
 
 Para que uma conta tenha acesso de administrador, será necessário informar uma senha de administrador durante o cadastro.
 
-O sistema verificará essa senha e, caso esteja correta, a conta será cadastrada como administrador. Caso a senha não seja informada ou esteja incorreta, a conta será cadastrada como usuário comum.
+O backend verificará essa senha e, caso esteja correta, a conta será cadastrada com o campo `is_admin` definido como `TRUE`. Caso a senha não seja informada ou esteja incorreta, a conta será cadastrada como usuário comum, com `is_admin` definido como `FALSE`.
 
 O administrador poderá:
 
@@ -47,7 +49,7 @@ O administrador poderá:
 - Excluir filmes;
 - Visualizar todos os filmes cadastrados.
 
-## Catálogo de Filmes
+## 4. Catálogo de Filmes
 
 O CineMatch possuirá um catálogo contendo os filmes cadastrados pelos administradores.
 
@@ -60,9 +62,9 @@ Cada filme terá informações como:
 - Diretor;
 - Capa.
 
-Os filmes serão apresentados no catálogo de forma organizada. Ao selecionar um filme, o usuário poderá visualizar suas informações completas.
+Os filmes serão apresentados no catálogo de forma organizada. Ao selecionar um filme, o usuário poderá visualizar suas informações completas, além das avaliações realizadas por outros usuários.
 
-## Filmes Favoritos
+## 5. Filmes Favoritos
 
 Os usuários poderão adicionar filmes à sua lista de favoritos e removê-los quando desejarem.
 
@@ -74,15 +76,47 @@ A funcionalidade de favoritos representará um relacionamento muitos-para-muitos
 
 Um usuário poderá favoritar vários filmes e um filme poderá ser favoritado por vários usuários.
 
-Esse relacionamento será representado pela tabela `favoritos`.
+Esse relacionamento será representado pela tabela `favoritos`, que armazenará os identificadores do usuário e do filme.
 
-```text
+**Representação:**
+
 USUÁRIO N -------- N FILME
-           |
-       FAVORITOS
-```
 
-## Sistema de Login e Autenticação
+A tabela FAVORITOS será responsável por estabelecer esse relacionamento.
+
+## 6. Sistema de Avaliações
+
+O CineMatch permitirá que os usuários registrem avaliações sobre os filmes disponíveis no catálogo.
+
+Cada avaliação poderá conter:
+
+- Nota;
+- Comentário;
+- Data da avaliação;
+- Identificador do usuário;
+- Identificador do filme.
+
+O usuário poderá editar ou excluir suas próprias avaliações.
+
+As avaliações serão exibidas na página de detalhes de cada filme, permitindo que outros usuários conheçam as opiniões registradas na plataforma.
+
+### Relacionamento 1:N
+
+A funcionalidade de avaliações estabelecerá relacionamentos de um-para-muitos (1:N).
+
+Um usuário poderá realizar várias avaliações, mas cada avaliação pertencerá a apenas um usuário.
+
+Da mesma forma, um filme poderá receber várias avaliações, mas cada avaliação estará relacionada a apenas um filme.
+
+**Representação:**
+
+USUÁRIO 1 -------- N AVALIAÇÕES
+
+FILME 1 -------- N AVALIAÇÕES
+
+A tabela `avaliacoes` será responsável por representar esses relacionamentos.
+
+## 7. Sistema de Login e Autenticação
 
 O sistema possuirá cadastro e login de usuários.
 
@@ -93,184 +127,225 @@ Durante o cadastro serão informados:
 - Senha;
 - Senha de administrador, caso o usuário queira criar uma conta administrativa.
 
-Após realizar o login, o backend gerará um JWT (JSON Web Token) para identificar o usuário autenticado.
+A senha do usuário será criptografada utilizando a biblioteca bcrypt antes de ser armazenada no banco de dados.
+
+O campo destinado à senha criptografada será do tipo `VARCHAR(60)`.
+
+Após realizar o login, o backend verificará as credenciais e gerará um JWT (JSON Web Token) para identificar o usuário autenticado.
 
 O token será utilizado para acessar funcionalidades que exigem autenticação.
 
-O sistema também verificará o tipo de usuário para determinar quais funcionalidades poderão ser acessadas.
+O sistema também verificará o campo `is_admin` para determinar quais funcionalidades poderão ser acessadas.
 
 ### Fluxo de acesso
 
-```text
 CADASTRO
-   |
-   v
-Nome + E-mail + Senha
-   |
-   v
-Senha de administrador foi informada?
-   |
-   +-------------------+
-   |                   |
-  SIM                 NÃO
-   |                   |
-   v                   v
-ADMIN              USUÁRIO
-   |                   |
-   +---------+---------+
-             |
-             v
-           LOGIN
-             |
-             v
-            JWT
-             |
-             v
-    Sistema identifica
-     o tipo de usuário
-```
 
-## Upload de Arquivos
+↓
+
+Nome + E-mail + Senha
+
+↓
+
+Senha de administrador foi informada?
+
+↓
+
+SIM → Senha correta? → `is_admin = TRUE`
+
+NÃO → `is_admin = FALSE`
+
+↓
+
+LOGIN
+
+↓
+
+Verificação das credenciais
+
+↓
+
+Geração do JWT
+
+↓
+
+Sistema identifica o usuário e suas permissões.
+
+## 8. Upload de Arquivos
 
 O sistema terá uma funcionalidade de upload de arquivos para as capas dos filmes.
 
 Ao cadastrar ou editar um filme, o administrador poderá enviar uma imagem que será utilizada como capa no catálogo.
 
-O arquivo será enviado pelo frontend para o backend e armazenado pelo sistema.
+O arquivo será enviado pelo frontend para o backend e armazenado em uma pasta do projeto destinada às imagens.
 
-## Gerenciamento de Filmes
+No banco de dados, o campo `capa` armazenará o caminho ou nome do arquivo, permitindo que o sistema localize e apresente a imagem quando necessário.
+
+Dessa forma, as imagens não serão armazenadas diretamente no banco de dados.
+
+## 9. Gerenciamento de Filmes
 
 Somente administradores poderão modificar o catálogo.
 
 O administrador poderá realizar as seguintes operações:
 
-### Cadastrar
+**Cadastrar:** adicionar um novo filme ao catálogo.
 
-Adicionar um novo filme ao catálogo.
+**Visualizar:** consultar os filmes cadastrados.
 
-### Visualizar
+**Editar:** alterar as informações de um filme.
 
-Visualizar os filmes cadastrados.
-
-### Editar
-
-Alterar as informações de um filme.
-
-### Excluir
-
-Remover um filme do catálogo.
+**Excluir:** remover um filme do catálogo.
 
 Essas operações formarão o CRUD de filmes.
 
-## Banco de Dados
+## 10. Banco de Dados
 
 O banco de dados será desenvolvido utilizando PostgreSQL.
 
-O sistema contará inicialmente com três tabelas principais.
+O sistema contará com quatro tabelas principais: `usuarios`, `filmes`, `favoritos` e `avaliacoes`.
 
-### usuarios
+### 10.1. Tabela usuarios
 
 Armazena as informações das contas cadastradas.
 
-| Campo | Descrição |
-|---|---|
-| `id` | Identificador do usuário |
-| `nome` | Nome do usuário |
-| `email` | E-mail |
-| `senha` | Senha do usuário |
-| `tipo` | Tipo de usuário |
+| Campo | Tipo | Descrição |
+|---|---|---|
+| id | SERIAL PRIMARY KEY | Identificador do usuário |
+| nome | VARCHAR(100) | Nome do usuário |
+| email | VARCHAR(150) UNIQUE | E-mail |
+| senha | VARCHAR(60) | Senha criptografada com bcrypt |
+| is_admin | BOOLEAN DEFAULT FALSE | Indica se é administrador |
 
-### filmes
+### 10.2. Tabela filmes
 
 Armazena as informações dos filmes disponíveis no catálogo.
 
-| Campo | Descrição |
-|---|---|
-| `id` | Identificador do filme |
-| `titulo` | Título |
-| `sinopse` | Sinopse |
-| `ano` | Ano de lançamento |
-| `genero` | Gênero |
-| `diretor` | Diretor |
-| `capa` | Imagem da capa |
+| Campo | Tipo | Descrição |
+|---|---|---|
+| id | SERIAL PRIMARY KEY | Identificador do filme |
+| titulo | VARCHAR(150) | Título |
+| sinopse | TEXT | Sinopse |
+| ano | INTEGER | Ano de lançamento |
+| genero | VARCHAR(100) | Gênero |
+| diretor | VARCHAR(100) | Diretor |
+| capa | VARCHAR(255) | Caminho ou nome do arquivo da capa |
 
-### favoritos
+### 10.3. Tabela favoritos
 
 Relaciona os usuários aos filmes adicionados aos favoritos.
 
-| Campo | Descrição |
-|---|---|
-| `id` | Identificador |
-| `usuario_id` | Usuário |
-| `filme_id` | Filme |
+| Campo | Tipo | Descrição |
+|---|---|---|
+| id | SERIAL PRIMARY KEY | Identificador |
+| usuario_id | INTEGER | Identificador do usuário |
+| filme_id | INTEGER | Identificador do filme |
 
-## Relacionamentos do Banco
+Os campos `usuario_id` e `filme_id` serão chaves estrangeiras, relacionadas às tabelas `usuarios` e `filmes`.
 
-O banco de dados possuirá os relacionamentos necessários para o projeto.
+Também será utilizada uma restrição UNIQUE em conjunto com esses dois campos, impedindo que o mesmo usuário favorite o mesmo filme mais de uma vez.
 
-### Relacionamento 1:N
+### 10.4. Tabela avaliacoes
 
-Um usuário poderá possuir vários registros na tabela de favoritos.
+Armazena as avaliações realizadas pelos usuários sobre os filmes.
 
-```text
-USUÁRIO 1 -------- N FAVORITOS
-```
+| Campo | Tipo | Descrição |
+|---|---|---|
+| id | SERIAL PRIMARY KEY | Identificador da avaliação |
+| usuario_id | INTEGER | Identificador do usuário |
+| filme_id | INTEGER | Identificador do filme |
+| nota | NUMERIC(2,1) | Nota atribuída ao filme |
+| comentario | TEXT | Comentário do usuário |
+| data_avaliacao | TIMESTAMP DEFAULT CURRENT_TIMESTAMP | Data da avaliação |
 
-### Relacionamento N:N
+Os campos `usuario_id` e `filme_id` serão chaves estrangeiras, relacionadas às tabelas `usuarios` e `filmes`.
+
+Cada avaliação pertencerá a um único usuário e a um único filme.
+
+Também será utilizada uma restrição UNIQUE em conjunto com `usuario_id` e `filme_id`, permitindo que cada usuário tenha apenas uma avaliação por filme.
+
+## 11. Relacionamentos do Banco de Dados
+
+O banco de dados possuirá os relacionamentos necessários para atender aos requisitos da atividade.
+
+### Relacionamento N:N — Usuários e Filmes
 
 Um usuário poderá favoritar vários filmes e um filme poderá ser favoritado por vários usuários.
 
-```text
-USUÁRIO N -------- N FILME
-           |
-       FAVORITOS
-```
+A tabela `favoritos` será responsável por representar esse relacionamento.
 
-A tabela `favoritos` será responsável por representar o relacionamento N:N entre `usuarios` e `filmes`.
+USUÁRIOS N -------- N FILMES
 
-## API REST
+　　　　　FAVORITOS
+
+### Relacionamento 1:N — Usuários e Avaliações
+
+Um usuário poderá realizar várias avaliações, mas cada avaliação pertencerá a apenas um usuário.
+
+USUÁRIOS 1 -------- N AVALIAÇÕES
+
+### Relacionamento 1:N — Filmes e Avaliações
+
+Um filme poderá receber várias avaliações, mas cada avaliação estará relacionada a apenas um filme.
+
+FILMES 1 -------- N AVALIAÇÕES
+
+Dessa forma, o banco de dados possuirá tanto o relacionamento N:N quanto os relacionamentos 1:N exigidos na atividade.
+
+## 12. API REST
 
 O backend disponibilizará uma API REST para permitir a comunicação entre o frontend React e o banco de dados.
 
 ### Usuários
 
-```text
-POST   /usuarios
-POST   /usuarios/login
-```
+POST /usuarios — Cadastrar usuário.
+
+POST /usuarios/login — Realizar login.
 
 ### Filmes
 
-```text
-GET    /filmes
-GET    /filmes/:id
-POST   /filmes
-PUT    /filmes/:id
-DELETE /filmes/:id
-```
+GET /filmes — Listar filmes.
+
+GET /filmes/:id — Visualizar detalhes de um filme.
+
+POST /filmes — Cadastrar filme (administrador).
+
+PUT /filmes/:id — Editar filme (administrador).
+
+DELETE /filmes/:id — Excluir filme (administrador).
 
 ### Favoritos
 
-```text
-GET    /favoritos
-POST   /favoritos/:filme_id
-DELETE /favoritos/:filme_id
-```
+GET /favoritos — Listar favoritos do usuário autenticado.
 
-## Frontend
+POST /favoritos/:filme_id — Adicionar filme aos favoritos.
+
+DELETE /favoritos/:filme_id — Remover filme dos favoritos.
+
+### Avaliações
+
+GET /avaliacoes/filme/:filme_id — Listar avaliações de um filme.
+
+POST /avaliacoes/:filme_id — Cadastrar avaliação.
+
+PUT /avaliacoes/:id — Editar avaliação própria.
+
+DELETE /avaliacoes/:id — Excluir avaliação própria.
+
+As rotas que exigirem autenticação utilizarão o JWT. As operações administrativas serão protegidas por uma verificação adicional do campo `is_admin`.
+
+## 13. Frontend
 
 O frontend será desenvolvido utilizando React e será responsável pela interface do CineMatch.
 
 As principais páginas serão:
 
-```text
-/login
-/cadastro
-/filmes
-/filmes/:id
-/favoritos
-/admin
-```
+- `/login`
+- `/cadastro`
+- `/filmes`
+- `/filmes/:id`
+- `/favoritos`
+- `/admin`
 
 ### Página Inicial
 
@@ -278,15 +353,19 @@ Apresentará o catálogo de filmes disponíveis.
 
 ### Página de Login
 
-Permite que usuários cadastrados entrem no sistema.
+Permitirá que usuários cadastrados entrem no sistema.
 
 ### Página de Cadastro
 
-Permite criar uma nova conta e definir se ela será de usuário comum ou administrador por meio da senha de administrador.
+Permitirá criar uma nova conta e definir se ela será de usuário comum ou administrador por meio da senha de administrador.
 
 ### Página de Filmes
 
 Apresentará os filmes cadastrados no sistema.
+
+### Página de Detalhes do Filme
+
+Apresentará as informações completas do filme, as avaliações realizadas pelos usuários e a opção de adicionar aos favoritos.
 
 ### Página de Favoritos
 
@@ -296,25 +375,25 @@ Apresentará os filmes favoritados pelo usuário conectado.
 
 Será acessível somente para administradores e permitirá o gerenciamento dos filmes.
 
-## Tecnologias Utilizadas
+## 14. Tecnologias Utilizadas
 
-### Backend
+**Backend**
 
-- JavaScript
-- Node.js
-- Express
-- PostgreSQL
-- JWT
-- bcrypt
+- JavaScript;
+- Node.js;
+- Express;
+- PostgreSQL;
+- JWT;
+- bcrypt.
 
-### Frontend
+**Frontend**
 
-- React
-- React Router
-- Fetch API ou Axios
-- CSS
+- React;
+- React Router;
+- Fetch API ou Axios;
+- CSS.
 
-## Requisitos Atendidos
+## 15. Requisitos Atendidos
 
 | Requisito | Implementação |
 |---|---|
@@ -323,19 +402,19 @@ Será acessível somente para administradores e permitirá o gerenciamento dos f
 | Frontend React | Interface do CineMatch |
 | Login | Cadastro e login |
 | Autenticação JWT | Token para usuários autenticados |
-| Usuário comum | Catálogo e favoritos |
+| Usuário comum | Catálogo, favoritos e avaliações |
 | Administrador | Gerenciamento de filmes |
-| Senha de administrador | Define o tipo de acesso da conta |
-| Relacionamento 1:N | Usuários → Favoritos |
-| Relacionamento N:N | Usuários ↔ Filmes |
+| Senha de administrador | Define o acesso administrativo |
+| Relacionamento 1:N | Usuários → Avaliações e Filmes → Avaliações |
+| Relacionamento N:N | Usuários ↔ Filmes (favoritos) |
 | CRUD | Cadastro, visualização, edição e exclusão de filmes |
-| Upload de arquivo | Capa dos filmes |
+| Upload de arquivo | Envio de capas dos filmes |
 | Comunicação Frontend/Backend | React consumindo a API REST |
 
-## Resultado Esperado
+## 16. Resultado Esperado
 
-O CineMatch deverá permitir que um usuário crie uma conta, faça login, navegue pelo catálogo de filmes, visualize informações sobre os títulos e monte sua própria lista de favoritos.
+O CineMatch deverá permitir que um usuário crie uma conta, faça login, navegue pelo catálogo de filmes, visualize informações sobre os títulos, registre avaliações e monte sua própria lista de favoritos.
 
 Os administradores poderão cadastrar, editar, visualizar e excluir filmes, mantendo o catálogo da plataforma atualizado.
 
-O sistema será desenvolvido de forma simples e objetiva, utilizando apenas as funcionalidades necessárias para atender aos requisitos do projeto.
+O sistema será desenvolvido de forma simples e objetiva, utilizando as funcionalidades necessárias para atender aos requisitos do projeto e os relacionamentos adequados no banco de dados.
