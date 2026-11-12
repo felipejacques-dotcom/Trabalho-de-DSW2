@@ -1,7 +1,6 @@
 node_modules/
 npm-debug.log
 .env
-dist/
-*.log
 db_data/
+*.log
 .vscode/

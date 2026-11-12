@@ -1,14 +1,37 @@
 <!DOCTYPE html>
 <html lang="pt-br">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Página inicial</title>
-</head>
-<body>
-    <h1>Bem vindo ao express_template_docker</h1>
-    <p>Teste a rota <a href="/usuarios">neste link</a></p>
-    <p>Bom desenvolvimento!</p>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CineMatch - API</title>
 
+  <style>
+    body { font-family: Arial, sans-serif; max-width: 900px; margin: 40px auto; padding: 0 20px; color: #222; }
+    h1 { color: #273c75; } h2 { margin-top: 28px; }
+    code { background: #f1f2f6; padding: 3px 6px; border-radius: 4px; }
+    li { margin: 9px 0; } a { color: #273c75; }
+  </style>
+
+</head>
+
+<body>
+  <h1>CineMatch — API REST</h1>
+  <p>Backend do sistema de catálogo, favoritos e avaliações de filmes.</p>
+  <p>Consulte a documentação completa no arquivo <strong>API.md</strong> do repositório.</p>
+  <h2>Rotas disponíveis</h2>
+
+  <ul>
+    <li><code>POST /usuarios</code> — cadastro</li>
+    <li><code>POST /usuarios/login</code> — login e JWT</li>
+    <li><code>GET /usuarios/perfil</code> — perfil (JWT)</li>
+    <li><code>GET /filmes</code> e <code>GET /filmes/:id</code> — catálogo público</li>
+    <li><code>POST /filmes</code>, <code>PUT /filmes/:id</code>, <code>DELETE /filmes/:id</code> — gerenciamento (administrador)</li>
+    <li><code>GET /favoritos</code>, <code>POST /favoritos/:filme_id</code>, <code>DELETE /favoritos/:filme_id</code> — favoritos (JWT)</li>
+    <li><code>GET /avaliacoes/filme/:filme_id</code> — listar avaliações</li>
+    <li><code>POST /avaliacoes/:filme_id</code>, <code>PUT /avaliacoes/:id</code>, <code>DELETE /avaliacoes/:id</code> — avaliações (JWT)</li>
+
+  </ul>
+  
+  <p>As rotas protegidas recebem <code>Authorization: Bearer TOKEN</code>.</p>
 </body>
 </html>

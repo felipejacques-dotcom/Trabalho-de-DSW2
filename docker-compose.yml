@@ -9,6 +9,13 @@ services:
     environment:
       - NODE_ENV=development
       - PORT=3000
+      - DB_HOST=database
+      - DB_USER=usuario
+      - DB_PASS=senha
+      - DB_NAME=bancodados
+      - DB_PORT=5432
+      - JWT_SECRET=${JWT_SECRET}
+      - ADMIN_REGISTER_PASSWORD=${ADMIN_REGISTER_PASSWORD}
     ports:
       - "${PORT:-3000}:3000"
     depends_on:
@@ -19,7 +26,7 @@ services:
     image: postgres:18-alpine
     volumes:
       - db_data:/var/lib/postgresql
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql:ro
     environment:
       - POSTGRES_USER=usuario
       - POSTGRES_PASSWORD=senha
