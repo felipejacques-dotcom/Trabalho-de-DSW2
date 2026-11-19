@@ -1,0 +1,34 @@
+.home {
+    width: 100%;
+    color: white;
+}
+
+.home-introducao {
+    padding: 50px;
+    background-color: #1c1c1c;
+}
+
+.home-introducao h1 {
+    font-size: 32px;
+    margin-bottom: 15px;
+}
+
+.home-introducao p {
+    color: #cccccc;
+    font-size: 16px;
+}
+
+.home-filmes {
+    padding: 30px 50px;
+}
+
+.home-filmes h2 {
+    font-size: 24px;
+    margin-bottom: 25px;
+}
+
+.lista-filmes {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 25px;
+}
