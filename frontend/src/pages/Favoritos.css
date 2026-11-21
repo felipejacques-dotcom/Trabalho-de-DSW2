@@ -1,0 +1,156 @@
+.pagina-favoritos {
+    width: 100%;
+    min-height: 100vh;
+    background-color: #101010;
+    color: white;
+}
+
+.favoritos-introducao {
+    width: 100%;
+    padding: 55px 50px;
+    background-color: #1c1c1c;
+}
+
+.favoritos-introducao h1 {
+    font-size: 32px;
+    margin-bottom: 12px;
+}
+
+.favoritos-introducao p {
+    color: #aaaaaa;
+    font-size: 16px;
+}
+
+.favoritos-conteudo {
+    width: 100%;
+    padding: 40px 50px;
+}
+
+.favoritos-conteudo h2 {
+    font-size: 25px;
+    margin-bottom: 30px;
+}
+
+.lista-favoritos {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 30px;
+    justify-items: center;
+}
+
+.card-favorito {
+    width: 100%;
+    max-width: 230px;
+    background-color: #1c1c1c;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.4);
+    transition: transform 0.3s;
+}
+
+.card-favorito:hover {
+    transform: translateY(-5px);
+}
+
+.card-favorito img {
+    display: block;
+    width: 100%;
+    height: 310px;
+    object-fit: cover;
+}
+
+.card-favorito-info {
+    padding: 15px;
+}
+
+.card-favorito-info h3 {
+    font-size: 17px;
+    margin-bottom: 10px;
+}
+
+.card-favorito-info p {
+    color: #a78bfa;
+    font-size: 13px;
+    margin-bottom: 15px;
+}
+
+.botao-ver-detalhes,
+.botao-remover-favorito {
+    width: 100%;
+    padding: 11px;
+    border: none;
+    border-radius: 5px;
+    color: white;
+    font-size: 13px;
+    cursor: pointer;
+    margin-bottom: 10px;
+    transition: background-color 0.3s;
+}
+
+.botao-ver-detalhes {
+    background-color: #7c3aed;
+}
+
+.botao-ver-detalhes:hover {
+    background-color: #6d28d9;
+}
+
+.botao-remover-favorito {
+    background-color: #383838;
+}
+
+.botao-remover-favorito:hover {
+    background-color: #a83232;
+}
+
+.favoritos-vazio {
+    width: 100%;
+    padding: 60px 20px;
+    background-color: #1c1c1c;
+    border-radius: 10px;
+    text-align: center;
+}
+
+.favoritos-vazio h3 {
+    font-size: 22px;
+    margin-bottom: 12px;
+}
+
+.favoritos-vazio p {
+    color: #aaaaaa;
+    margin-bottom: 25px;
+    font-size: 14px;
+}
+
+.botao-explorar {
+    padding: 12px 25px;
+    background-color: #7c3aed;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 14px;
+    cursor: pointer;
+}
+
+.botao-explorar:hover {
+    background-color: #6d28d9;
+}
+
+@media (max-width: 600px) {
+    .favoritos-introducao {
+        padding: 40px 20px;
+    }
+
+    .favoritos-conteudo {
+        padding: 30px 20px;
+    }
+
+    .lista-favoritos {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 15px;
+    }
+
+    .card-favorito img {
+        height: 240px;
+    }
+}

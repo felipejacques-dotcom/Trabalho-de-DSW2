@@ -1,5 +1,5 @@
-
 import { useLocation, useNavigate } from "react-router-dom";
+import FormAvaliacao from "../components/FormAvaliacao";
 import "./DetalhesFilme.css";
 
 function DetalhesFilme() {
@@ -59,6 +59,8 @@ function DetalhesFilme() {
                 </div>
 
             </div>
+
+            <FormAvaliacao />
 
         </div>
     );

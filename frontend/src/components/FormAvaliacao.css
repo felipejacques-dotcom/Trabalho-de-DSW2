@@ -1,0 +1,108 @@
+.form-avaliacao {
+    width: 100%;
+    margin-top: 40px;
+    padding: 30px;
+    background-color: #1c1c1c;
+    border-radius: 10px;
+    color: white;
+}
+
+.form-avaliacao h2 {
+    font-size: 24px;
+    margin-bottom: 10px;
+}
+
+.avaliacao-descricao {
+    color: #aaaaaa;
+    font-size: 14px;
+    margin-bottom: 25px;
+}
+
+.campo-nota {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 25px;
+}
+
+.campo-nota label,
+.campo-comentario label {
+    font-size: 15px;
+    color: white;
+}
+
+.avaliacao-estrelas {
+    display: flex;
+    gap: 8px;
+}
+
+.estrela {
+    background: none;
+    border: none;
+    color: #555555;
+    font-size: 32px;
+    cursor: pointer;
+    transition: color 0.2s;
+}
+
+.estrela.selecionada {
+    color: #f5c518;
+}
+
+.estrela:hover {
+    color: #f5c518;
+}
+
+.campo-comentario {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+.campo-comentario textarea {
+    width: 100%;
+    padding: 13px;
+    background-color: #101010;
+    border: 1px solid #444444;
+    border-radius: 6px;
+    color: white;
+    font-family: Arial, Helvetica, sans-serif;
+    font-size: 14px;
+    resize: vertical;
+    outline: none;
+}
+
+.campo-comentario textarea:focus {
+    border-color: #7c3aed;
+}
+
+.campo-comentario textarea::placeholder {
+    color: #777777;
+}
+
+.botao-avaliar {
+    width: 100%;
+    padding: 13px;
+    background-color: #7c3aed;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.botao-avaliar:hover {
+    background-color: #6d28d9;
+}
+
+@media (max-width: 500px) {
+    .form-avaliacao {
+        padding: 20px;
+    }
+
+    .form-avaliacao h2 {
+        font-size: 21px;
+    }
+}

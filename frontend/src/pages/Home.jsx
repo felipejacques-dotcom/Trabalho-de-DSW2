@@ -1,4 +1,3 @@
-
 import CardFilme from "../components/CardFilme";
 import "./Home.css";
 
