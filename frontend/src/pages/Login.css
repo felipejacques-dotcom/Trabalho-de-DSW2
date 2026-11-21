@@ -1,0 +1,125 @@
+.pagina-login {
+    width: 100%;
+    min-height: calc(100vh - 75px);
+    background-color: #101010;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 40px 20px;
+    color: white;
+}
+
+.login-container {
+    width: 100%;
+    max-width: 430px;
+    background-color: #1c1c1c;
+    padding: 40px;
+    border-radius: 12px;
+    box-shadow: 0 5px 20px rgba(0, 0, 0, 0.4);
+}
+
+.login-container h1 {
+    font-size: 28px;
+    text-align: center;
+    margin-bottom: 12px;
+}
+
+.login-descricao {
+    color: #aaaaaa;
+    font-size: 14px;
+    text-align: center;
+    line-height: 1.5;
+    margin-bottom: 30px;
+}
+
+.form-login {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+.campo-login {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.campo-login label {
+    font-size: 14px;
+    color: #ffffff;
+}
+
+.campo-login input {
+    width: 100%;
+    padding: 13px;
+    background-color: #101010;
+    border: 1px solid #444444;
+    border-radius: 6px;
+    color: white;
+    font-size: 14px;
+    outline: none;
+}
+
+.campo-login input:focus {
+    border-color: #7c3aed;
+}
+
+.campo-login input::placeholder {
+    color: #777777;
+}
+
+.botao-login {
+    width: 100%;
+    padding: 13px;
+    margin-top: 5px;
+    background-color: #7c3aed;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    font-size: 15px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.botao-login:hover {
+    background-color: #6d28d9;
+}
+
+.login-cadastro {
+    text-align: center;
+    color: #aaaaaa;
+    font-size: 14px;
+    margin-top: 25px;
+}
+
+.login-cadastro a {
+    color: #a78bfa;
+    text-decoration: none;
+}
+
+.login-cadastro a:hover {
+    text-decoration: underline;
+}
+
+.login-voltar {
+    display: block;
+    text-align: center;
+    margin-top: 25px;
+    color: #aaaaaa;
+    font-size: 13px;
+    text-decoration: none;
+}
+
+.login-voltar:hover {
+    color: white;
+}
+
+@media (max-width: 500px) {
+    .login-container {
+        padding: 30px 22px;
+    }
+
+    .login-container h1 {
+        font-size: 24px;
+    }
+}

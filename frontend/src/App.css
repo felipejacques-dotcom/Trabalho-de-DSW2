@@ -1,17 +1,12 @@
-
 #root {
-  width: 100%;
-  min-height: 100vh;
-  margin: 0;
-  padding: 0;
+    width: 100%;
+    min-height: 100vh;
+    margin: 0;
+    padding: 0;
 }
 
 .App {
-  width: 100%;
-  min-height: 100vh;
-}
-
-main {
-  width: 100%;
-  padding: 20px 50px;
+    width: 100%;
+    min-height: 100vh;
+    background-color: #101010;
 }

@@ -1,16 +1,27 @@
-
+import { useNavigate } from "react-router-dom";
 import "./CardFilme.css";
 
 function CardFilme(props) {
+
+    const navigate = useNavigate();
+
+    function verDetalhes() {
+        navigate("/detalhes", {
+            state: props
+        });
+    }
+
     return (
         <div className="card-filme">
-            <img 
-                src={props.capa} 
-                alt={props.titulo} 
+
+            <img
+                src={props.capa}
+                alt={props.titulo}
                 className="card-filme-imagem"
             />
 
             <div className="card-filme-info">
+
                 <h3>{props.titulo}</h3>
 
                 <p className="card-filme-genero">
@@ -21,10 +32,15 @@ function CardFilme(props) {
                     {props.descricao}
                 </p>
 
-                <button className="botao-detalhes">
+                <button
+                    className="botao-detalhes"
+                    onClick={verDetalhes}
+                >
                     Ver detalhes
                 </button>
+
             </div>
+
         </div>
     );
 }

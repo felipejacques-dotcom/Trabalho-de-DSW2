@@ -1,15 +1,18 @@
 .home {
     width: 100%;
+    min-height: 100vh;
+    background-color: #101010;
     color: white;
 }
 
 .home-introducao {
-    padding: 50px;
+    width: 100%;
+    padding: 65px 50px;
     background-color: #1c1c1c;
 }
 
 .home-introducao h1 {
-    font-size: 32px;
+    font-size: 34px;
     margin-bottom: 15px;
 }
 
@@ -19,16 +22,34 @@
 }
 
 .home-filmes {
-    padding: 30px 50px;
+    width: 100%;
+    padding: 40px 50px;
+    background-color: #101010;
 }
 
 .home-filmes h2 {
-    font-size: 24px;
-    margin-bottom: 25px;
+    font-size: 26px;
+    margin-bottom: 30px;
 }
 
 .lista-filmes {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 25px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 30px;
+    justify-items: center;
+}
+
+@media (max-width: 600px) {
+    .home-introducao {
+        padding: 40px 20px;
+    }
+
+    .home-filmes {
+        padding: 30px 20px;
+    }
+
+    .lista-filmes {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 15px;
+    }
 }
