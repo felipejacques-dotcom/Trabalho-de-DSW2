@@ -6,9 +6,7 @@ function CardFilme(props) {
     const navigate = useNavigate();
 
     function verDetalhes() {
-        navigate("/detalhes", {
-            state: props
-        });
+        navigate(`/detalhes/${props.id}`);
     }
 
     return (

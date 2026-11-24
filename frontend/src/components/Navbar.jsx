@@ -1,21 +1,28 @@
+
 import { Link } from "react-router-dom";
 import { useAuth } from "../context/AuthContext";
 import "./Navbar.css";
 
 function Navbar() {
 
-    const { autenticado, logout } = useAuth();
+    const { usuario, autenticado, logout } = useAuth();
 
     return (
         <nav className="navbar">
+
             <div className="navbar-logo">
                 <Link to="/">CineMatch</Link>
             </div>
 
             <div className="navbar-links">
+
                 <Link to="/">Início</Link>
 
-                <Link to="/favoritos">Favoritos</Link>
+
+
+                {autenticado && usuario?.is_admin && (
+                    <Link to="/admin">Painel administrativo</Link>
+                )}
 
                 {!autenticado ? (
                     <>
@@ -26,12 +33,17 @@ function Navbar() {
                         </Link>
                     </>
                 ) : (
-                    <button onClick={logout} className="botao-sair">
-                        Sair
-                    </button>
-                    
+                    <>
+                        <Link to="/favoritos">Favoritos</Link>
+                        <button onClick={logout} className="botao-sair">
+                            Sair
+                        </button>
+                    </>
+
                 )}
+
             </div>
+
         </nav>
     );
 }

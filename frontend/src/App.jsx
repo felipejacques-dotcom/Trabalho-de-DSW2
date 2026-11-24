@@ -23,7 +23,7 @@ function App() {
                 <Route path="/" element={<Home />} />
 
                 <Route
-                    path="/detalhes"
+                    path="/detalhes/:id"
                     element={<DetalhesFilme />}
                 />
 
