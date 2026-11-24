@@ -43,7 +43,8 @@ function Cadastro() {
 
         } catch (error) {
             console.log("Erro no cadastro:", error);
-
+            console.log("Status:", error.response?.status);
+            console.log("Resposta do backend:", error.response?.data);
             alert(
                 error.response?.data?.msg ||
                 "Não foi possível realizar o cadastro."

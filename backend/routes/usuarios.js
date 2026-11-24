@@ -23,7 +23,9 @@ router.post("/", async (req, res) => {
         }
 
         const senhaCriptografada = await bcrypt.hash(senha, 10);
-        const admin = process.env.ADMIN_REGISTER_PASSWORD && senha_admin === process.env.ADMIN_REGISTER_PASSWORD;
+        const admin = Boolean(process.env.ADMIN_REGISTER_PASSWORD && senha_admin === process.env.ADMIN_REGISTER_PASSWORD);
+
+
         const r = await db.query("INSERT INTO usuarios(nome, email, senha, is_admin) VALUES($1, $2, $3, $4) RETURNING id, nome, email, is_admin", [nome, emailFinal, senhaCriptografada, admin]);
         return res.status(201).json({ msg: "usuario cadastrado", data: r.rows[0] });
     }
