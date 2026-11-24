@@ -1,7 +1,27 @@
-import { Link } from "react-router-dom";
+import { useState, useContext } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { AuthContext } from "../context/AuthContext";
 import "./Login.css";
 
 function Login() {
+
+    const [email, setEmail] = useState("");
+    const [senha, setSenha] = useState("");
+
+    const { login, carregando } = useContext(AuthContext);
+
+    const navigate = useNavigate();
+
+    async function fazerLogin(event) {
+        event.preventDefault();
+
+        const sucesso = await login(email, senha);
+
+        if (sucesso) {
+            navigate("/");
+        }
+    }
+
     return (
         <div className="pagina-login">
             <div className="login-container">
@@ -12,7 +32,7 @@ function Login() {
                     Entre na sua conta para continuar explorando o CineMatch.
                 </p>
 
-                <form className="form-login">
+                <form className="form-login" onSubmit={fazerLogin}>
 
                     <div className="campo-login">
                         <label htmlFor="email">E-mail</label>
@@ -20,6 +40,8 @@ function Login() {
                             type="email"
                             id="email"
                             placeholder="Digite seu e-mail"
+                            value={email}
+                            onChange={(event) => setEmail(event.target.value)}
                             required
                         />
                     </div>
@@ -30,12 +52,18 @@ function Login() {
                             type="password"
                             id="senha"
                             placeholder="Digite sua senha"
+                            value={senha}
+                            onChange={(event) => setSenha(event.target.value)}
                             required
                         />
                     </div>
 
-                    <button type="submit" className="botao-login">
-                        Entrar
+                    <button
+                        type="submit"
+                        className="botao-login"
+                        disabled={carregando}
+                    >
+                        {carregando ? "Entrando..." : "Entrar"}
                     </button>
 
                 </form>

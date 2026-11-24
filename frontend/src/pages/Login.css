@@ -123,3 +123,8 @@
         font-size: 24px;
     }
 }
+
+.botao-login:disabled {
+    background-color: #555555;
+    cursor: not-allowed;
+}
