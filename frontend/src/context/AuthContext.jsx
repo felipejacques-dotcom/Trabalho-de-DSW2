@@ -1,7 +1,11 @@
-import { createContext, useState } from "react";
+import { createContext, useState, useContext } from "react";
 import api from "../services/api";
 
 export const AuthContext = createContext();
+
+export function useAuth() {
+    return useContext(AuthContext);
+}
 
 export function AuthProvider({ children }) {
 
@@ -16,48 +20,52 @@ export function AuthProvider({ children }) {
     async function login(email, senha) {
         try {
             setCarregando(true);
-
+    
             const resposta = await api.post("/usuarios/login", {
                 email: email,
                 senha: senha
             });
-
+    
             const dados = resposta.data.data;
-
+    
             const token = dados.token;
             const usuarioLogado = dados.usuario;
-
+    
             if (!token || !usuarioLogado) {
                 throw new Error("Resposta de login inválida.");
             }
-
+    
             localStorage.setItem("token", token);
             localStorage.setItem("usuario", JSON.stringify(usuarioLogado));
-
+    
             setUsuario(usuarioLogado);
-
+    
+            alert("Login realizado com sucesso!");
+    
             return true;
-
+    
         } catch (error) {
             console.log("Erro no login:", error);
-
+    
             alert(
                 error.response?.data?.msg ||
                 "Não foi possível realizar o login."
             );
-
+    
             return false;
-
+    
         } finally {
             setCarregando(false);
         }
     }
-
+    
     function logout() {
         localStorage.removeItem("token");
         localStorage.removeItem("usuario");
-
+    
         setUsuario(null);
+    
+        alert("Você saiu da sua conta!");
     }
 
     const autenticado = usuario !== null;

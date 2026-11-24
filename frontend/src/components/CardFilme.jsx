@@ -1,8 +1,8 @@
+
 import { useNavigate } from "react-router-dom";
 import "./CardFilme.css";
 
 function CardFilme(props) {
-
     const navigate = useNavigate();
 
     function verDetalhes() {
@@ -14,11 +14,13 @@ function CardFilme(props) {
     return (
         <div className="card-filme">
 
-            <img
-                src={props.capa}
-                alt={props.titulo}
-                className="card-filme-imagem"
-            />
+            {props.capa && (
+                <img
+                    src={props.capa}
+                    alt={props.titulo}
+                    className="card-filme-imagem"
+                />
+            )}
 
             <div className="card-filme-info">
 
@@ -32,10 +34,7 @@ function CardFilme(props) {
                     {props.descricao}
                 </p>
 
-                <button
-                    className="botao-detalhes"
-                    onClick={verDetalhes}
-                >
+                <button className="botao-detalhes" onClick={verDetalhes}>
                     Ver detalhes
                 </button>
 

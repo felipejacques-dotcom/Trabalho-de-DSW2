@@ -41,5 +41,4 @@ INSERT INTO filmes (titulo, sinopse, ano, genero, diretor, capa, capa_tipo)VALUE
 
 INSERT INTO favoritos (usuario_id, filme_id) VALUES (1, 1), (1, 3), (2, 2);
 
-
 INSERT INTO avaliacoes (usuario_id, filme_id, nota, comentario) VALUES (1, 1, 5, 'Um filme muito interessante.'), (1, 3, 5, 'Uma excelente historia.'), (2, 2, 4, 'Um classico do cinema.');
