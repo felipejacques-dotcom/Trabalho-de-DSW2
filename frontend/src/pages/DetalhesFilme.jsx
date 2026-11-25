@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../services/api";
@@ -13,6 +12,8 @@ function DetalhesFilme() {
     const [filme, setFilme] = useState(null);
     const [carregando, setCarregando] = useState(true);
     const [erro, setErro] = useState("");
+    const [mensagemFavorito, setMensagemFavorito] = useState("");
+    const [adicionando, setAdicionando] = useState(false);
 
     useEffect(() => {
 
@@ -33,6 +34,34 @@ function DetalhesFilme() {
         buscarFilme();
 
     }, [id]);
+
+    async function adicionarFavorito() {
+
+        try {
+            setAdicionando(true);
+            setMensagemFavorito("");
+
+            await api.post(`/favoritos/${filme.id}`);
+
+            setMensagemFavorito("Filme adicionado aos favoritos!");
+
+        }
+        catch (error) {
+            console.log("Erro ao adicionar favorito:", error);
+
+            const mensagem = error.response?.data?.msg;
+
+            if (error.response?.status === 401) {
+                setMensagemFavorito("Faça login para adicionar favoritos.");
+            }
+            else {
+                setMensagemFavorito(mensagem || "Não foi possível adicionar o filme aos favoritos.");
+            }
+        }
+        finally {
+            setAdicionando(false);
+        }
+    }
 
     if (carregando) {
         return <p>Carregando filme...</p>;
@@ -94,9 +123,17 @@ function DetalhesFilme() {
                         ({filme.total_avaliacoes} avaliações)
                     </p>
 
-                    <button className="botao-favoritos">
-                        Adicionar aos favoritos
+                    <button
+                        className="botao-favoritos"
+                        onClick={adicionarFavorito}
+                        disabled={adicionando}
+                    >
+                        {adicionando ? "Adicionando..." : "Adicionar aos favoritos"}
                     </button>
+
+                    {mensagemFavorito && (
+                        <p>{mensagemFavorito}</p>
+                    )}
 
                 </div>
 

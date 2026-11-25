@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import api from "../services/api";
@@ -17,6 +18,13 @@ function Cadastro() {
     async function fazerCadastro(event) {
         event.preventDefault();
 
+        const emailValido = /^[^\s@]+@[^\s@]+\.com$/i.test(email.trim());
+
+        if (!emailValido) {
+            alert("Digite um e-mail válido que termine em .com.");
+            return;
+        }
+
         if (senha !== confirmarSenha) {
             alert("As senhas não são iguais.");
             return;
@@ -32,7 +40,7 @@ function Cadastro() {
 
             await api.post("/usuarios", {
                 nome: nome,
-                email: email,
+                email: email.trim().toLowerCase(),
                 senha: senha,
                 senha_admin: senhaAdmin
             });
@@ -45,6 +53,7 @@ function Cadastro() {
             console.log("Erro no cadastro:", error);
             console.log("Status:", error.response?.status);
             console.log("Resposta do backend:", error.response?.data);
+
             alert(
                 error.response?.data?.msg ||
                 "Não foi possível realizar o cadastro."
@@ -153,4 +162,3 @@ function Cadastro() {
 }
 
 export default Cadastro;
-

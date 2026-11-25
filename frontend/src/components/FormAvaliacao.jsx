@@ -1,11 +1,17 @@
 import { useState } from "react";
+import { useParams } from "react-router-dom";
+import api from "../services/api";
 import "./FormAvaliacao.css";
 
 function FormAvaliacao() {
+
+    const { id } = useParams();
+
     const [nota, setNota] = useState(0);
     const [comentario, setComentario] = useState("");
+    const [enviando, setEnviando] = useState(false);
 
-    function enviarAvaliacao(event) {
+    async function enviarAvaliacao(event) {
         event.preventDefault();
 
         if (nota === 0) {
@@ -18,17 +24,41 @@ function FormAvaliacao() {
             return;
         }
 
-        console.log("Nota:", nota);
-        console.log("Comentário:", comentario);
+        try {
+            setEnviando(true);
 
-        alert("Avaliação enviada com sucesso!");
+            await api.post(`/avaliacoes/${id}`, {
+                nota: nota,
+                comentario: comentario
+            });
 
-        setNota(0);
-        setComentario("");
+            alert("Avaliação enviada com sucesso!");
+
+            setNota(0);
+            setComentario("");
+
+        }
+        catch (error) {
+            console.log("Erro ao enviar avaliação:", error);
+
+            if (error.response?.status === 401) {
+                alert("Faça login para avaliar este filme.");
+            }
+            else {
+                alert(
+                    error.response?.data?.msg ||
+                    "Não foi possível enviar sua avaliação."
+                );
+            }
+        }
+        finally {
+            setEnviando(false);
+        }
     }
 
     return (
         <div className="form-avaliacao">
+
             <h2>Deixe sua avaliação</h2>
 
             <p className="avaliacao-descricao">
@@ -38,10 +68,13 @@ function FormAvaliacao() {
             <form onSubmit={enviarAvaliacao}>
 
                 <div className="campo-nota">
+
                     <label>Sua nota:</label>
 
                     <div className="avaliacao-estrelas">
+
                         {[1, 2, 3, 4, 5].map((estrela) => (
+
                             <button
                                 type="button"
                                 key={estrela}
@@ -54,11 +87,19 @@ function FormAvaliacao() {
                             >
                                 ★
                             </button>
+
                         ))}
+
                     </div>
+
+                    {nota > 0 && (
+                        <p>Nota selecionada: {nota}/5</p>
+                    )}
+
                 </div>
 
                 <div className="campo-comentario">
+
                     <label htmlFor="comentario">
                         Seu comentário:
                     </label>
@@ -70,13 +111,19 @@ function FormAvaliacao() {
                         onChange={(event) => setComentario(event.target.value)}
                         rows="5"
                     />
+
                 </div>
 
-                <button type="submit" className="botao-avaliar">
-                    Enviar avaliação
+                <button
+                    type="submit"
+                    className="botao-avaliar"
+                    disabled={enviando}
+                >
+                    {enviando ? "Enviando..." : "Enviar avaliação"}
                 </button>
 
             </form>
+
         </div>
     );
 }

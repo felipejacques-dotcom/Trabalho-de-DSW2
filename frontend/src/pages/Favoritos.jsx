@@ -1,34 +1,60 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../services/api";
 import "./Favoritos.css";
 
 function Favoritos() {
 
     const navigate = useNavigate();
 
-    const [filmesFavoritos, setFilmesFavoritos] = useState(() => {
-        const favoritosSalvos = localStorage.getItem("filmesFavoritos");
+    const [filmesFavoritos, setFilmesFavoritos] = useState([]);
+    const [carregando, setCarregando] = useState(true);
+    const [erro, setErro] = useState("");
 
-        return favoritosSalvos ? JSON.parse(favoritosSalvos) : [];
-    });
+    useEffect(() => {
 
-    function removerFavorito(titulo) {
-        const novaLista = filmesFavoritos.filter(
-            (filme) => filme.titulo !== titulo
-        );
+        async function buscarFavoritos() {
+            try {
+                const resposta = await api.get("/favoritos");
+                setFilmesFavoritos(resposta.data);
+            }
+            catch (error) {
+                console.log("Erro ao buscar favoritos:", error);
+                setErro("Não foi possível carregar seus favoritos.");
+            }
+            finally {
+                setCarregando(false);
+            }
+        }
 
-        setFilmesFavoritos(novaLista);
+        buscarFavoritos();
 
-        localStorage.setItem(
-            "filmesFavoritos",
-            JSON.stringify(novaLista)
-        );
+    }, []);
+
+    async function removerFavorito(id) {
+
+        try {
+            await api.delete(`/favoritos/${id}`);
+
+            const novaLista = filmesFavoritos.filter(
+                (filme) => filme.id !== id
+            );
+
+            setFilmesFavoritos(novaLista);
+
+        }
+        catch (error) {
+            console.log("Erro ao remover favorito:", error);
+            alert(error.response?.data?.msg || "Não foi possível remover o filme dos favoritos.");
+        }
     }
 
     function verDetalhes(filme) {
-        navigate("/detalhes", {
-            state: filme
-        });
+        navigate(`/detalhes/${filme.id}`);
+    }
+
+    if (carregando) {
+        return <p>Carregando favoritos...</p>;
     }
 
     return (
@@ -46,7 +72,13 @@ function Favoritos() {
 
                 <h2>Minha lista</h2>
 
-                {filmesFavoritos.length === 0 ? (
+                {erro ? (
+
+                    <div className="favoritos-vazio">
+                        <h3>{erro}</h3>
+                    </div>
+
+                ) : filmesFavoritos.length === 0 ? (
 
                     <div className="favoritos-vazio">
                         <h3>Sua lista está vazia</h3>
@@ -69,12 +101,14 @@ function Favoritos() {
 
                         {filmesFavoritos.map((filme) => (
 
-                            <div className="card-favorito" key={filme.titulo}>
+                            <div className="card-favorito" key={filme.id}>
 
-                                <img
-                                    src={filme.capa}
-                                    alt={filme.titulo}
-                                />
+                                {filme.capa && (
+                                    <img
+                                        src={`http://localhost:3000/filmes/${filme.id}/capa`}
+                                        alt={filme.titulo}
+                                    />
+                                )}
 
                                 <div className="card-favorito-info">
 
@@ -93,7 +127,7 @@ function Favoritos() {
 
                                     <button
                                         className="botao-remover-favorito"
-                                        onClick={() => removerFavorito(filme.titulo)}
+                                        onClick={() => removerFavorito(filme.id)}
                                     >
                                         Remover dos favoritos
                                     </button>

@@ -1,3 +1,4 @@
+
 import { useEffect, useState } from "react";
 import api from "../services/api";
 import "./Admin.css";
@@ -5,15 +6,18 @@ import "./Admin.css";
 function Admin() {
 
     const [filmes, setFilmes] = useState([]);
+    const [avaliacoes, setAvaliacoes] = useState([]);
 
     const [titulo, setTitulo] = useState("");
     const [ano, setAno] = useState("");
     const [genero, setGenero] = useState("");
+    const [diretor, setDiretor] = useState("");
     const [descricao, setDescricao] = useState("");
     const [capa, setCapa] = useState(null);
 
     const [editando, setEditando] = useState(null);
     const [carregando, setCarregando] = useState(true);
+    const [carregandoAvaliacoes, setCarregandoAvaliacoes] = useState(true);
 
     async function buscarFilmes() {
         try {
@@ -29,8 +33,23 @@ function Admin() {
         }
     }
 
+    async function buscarAvaliacoes() {
+        try {
+            const resposta = await api.get("/avaliacoes");
+            setAvaliacoes(resposta.data);
+        }
+        catch (error) {
+            console.log("Erro ao buscar avaliações:", error);
+            alert("Não foi possível carregar as avaliações.");
+        }
+        finally {
+            setCarregandoAvaliacoes(false);
+        }
+    }
+
     useEffect(() => {
         buscarFilmes();
+        buscarAvaliacoes();
     }, []);
 
     async function salvarFilme(event) {
@@ -38,11 +57,17 @@ function Admin() {
 
         if (
             titulo.trim() === "" ||
-            ano.trim() === "" ||
+            String(ano).trim() === "" ||
             genero.trim() === "" ||
+            diretor.trim() === "" ||
             descricao.trim() === ""
         ) {
             alert("Preencha todos os campos.");
+            return;
+        }
+
+        if (Number(ano) < 0) {
+            alert("O ano de lançamento não pode ser negativo.");
             return;
         }
 
@@ -56,6 +81,7 @@ function Admin() {
         dados.append("titulo", titulo);
         dados.append("ano", ano);
         dados.append("genero", genero);
+        dados.append("diretor", diretor);
         dados.append("sinopse", descricao);
 
         if (capa) {
@@ -83,8 +109,9 @@ function Admin() {
 
     function editarFilme(filme) {
         setTitulo(filme.titulo);
-        setAno(filme.ano || "");
+        setAno(String(filme.ano || ""));
         setGenero(filme.genero || "");
+        setDiretor(filme.diretor || "");
         setDescricao(filme.sinopse || "");
         setCapa(null);
 
@@ -107,6 +134,7 @@ function Admin() {
                 }
 
                 await buscarFilmes();
+                await buscarAvaliacoes();
             }
             catch (error) {
                 console.log("Erro ao excluir filme:", error);
@@ -115,10 +143,34 @@ function Admin() {
         }
     }
 
+    async function excluirAvaliacao(id) {
+        const confirmar = window.confirm(
+            "Tem certeza que deseja excluir esta avaliação? Essa ação não poderá ser desfeita."
+        );
+
+        if (confirmar) {
+            try {
+                await api.delete(`/avaliacoes/${id}`);
+
+                alert("Avaliação excluída com sucesso!");
+
+                await buscarAvaliacoes();
+            }
+            catch (error) {
+                console.log("Erro ao excluir avaliação:", error);
+                alert(
+                    error.response?.data?.msg ||
+                    "Não foi possível excluir a avaliação."
+                );
+            }
+        }
+    }
+
     function limparFormulario() {
         setTitulo("");
         setAno("");
         setGenero("");
+        setDiretor("");
         setDescricao("");
         setCapa(null);
         setEditando(null);
@@ -128,6 +180,10 @@ function Admin() {
         if (campoCapa) {
             campoCapa.value = "";
         }
+    }
+
+    function formatarData(data) {
+        return new Date(data).toLocaleString("pt-BR");
     }
 
     return (
@@ -168,6 +224,7 @@ function Admin() {
                             <input
                                 type="number"
                                 id="ano"
+                                min="0"
                                 value={ano}
                                 onChange={(event) => setAno(event.target.value)}
                                 placeholder="Ex: 2024"
@@ -182,6 +239,17 @@ function Admin() {
                                 value={genero}
                                 onChange={(event) => setGenero(event.target.value)}
                                 placeholder="Ex: Drama / Suspense"
+                            />
+                        </div>
+
+                        <div className="admin-campo">
+                            <label htmlFor="diretor">Diretor</label>
+                            <input
+                                type="text"
+                                id="diretor"
+                                value={diretor}
+                                onChange={(event) => setDiretor(event.target.value)}
+                                placeholder="Digite o nome do diretor"
                             />
                         </div>
 
@@ -204,8 +272,11 @@ function Admin() {
                                 accept="image/*"
                                 onChange={(event) => setCapa(event.target.files[0] || null)}
                             />
+
                             {editando !== null && (
-                                <p>Selecione uma nova imagem somente se quiser substituir a capa atual.</p>
+                                <p>
+                                    Selecione uma nova imagem somente se quiser substituir a capa atual.
+                                </p>
                             )}
                         </div>
 
@@ -292,6 +363,77 @@ function Admin() {
                                         </div>
 
                                     </div>
+
+                                </div>
+
+                            ))}
+
+                        </div>
+
+                    )}
+
+                </section>
+
+                <section className="admin-lista admin-avaliacoes">
+
+                    <h2>Avaliações dos usuários</h2>
+
+                    {carregandoAvaliacoes ? (
+
+                        <p>Carregando avaliações...</p>
+
+                    ) : avaliacoes.length === 0 ? (
+
+                        <div className="admin-vazio">
+                            <h3>Nenhuma avaliação cadastrada</h3>
+                            <p>
+                                As avaliações feitas pelos usuários aparecerão nesta área.
+                            </p>
+                        </div>
+
+                    ) : (
+
+                        <div className="admin-lista-avaliacoes">
+
+                            {avaliacoes.map((avaliacao) => (
+
+                                <div className="admin-avaliacao-card" key={avaliacao.id}>
+
+                                    <div className="admin-avaliacao-topo">
+
+                                        <div>
+                                            <h3>{avaliacao.filme_titulo}</h3>
+                                            <p>
+                                                Avaliado por: {avaliacao.usuario_nome}
+                                            </p>
+                                        </div>
+
+                                        <span className="admin-nota">
+                                            {Number(avaliacao.nota).toFixed(1)}/5
+                                        </span>
+
+                                    </div>
+
+                                    <div className="admin-avaliacao-comentario">
+
+                                        <strong>Comentário:</strong>
+
+                                        <p>
+                                            {avaliacao.comentario || "Nenhum comentário escrito."}
+                                        </p>
+
+                                    </div>
+
+                                    <span className="admin-avaliacao-data">
+                                        {formatarData(avaliacao.data_avaliacao)}
+                                    </span>
+
+                                    <button
+                                        className="botao-excluir"
+                                        onClick={() => excluirAvaliacao(avaliacao.id)}
+                                    >
+                                        Excluir avaliação
+                                    </button>
 
                                 </div>
 
